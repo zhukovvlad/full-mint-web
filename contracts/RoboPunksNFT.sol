@@ -13,5 +13,31 @@ contract RoboPunksNFT is ERC721, Ownable {
     string internal baseTokenUri;
     address payable public withdrawWallet;
     mapping(address => uint256) public walletMints;
-    
+
+    constructor() payable ERC721('RoboPunks', 'RP') {
+        mintPrice = 0.02 ether;
+        totalSupply = 0;
+        maxSupply = 1000;
+        maxPerWallet = 3;
+        // set withdraw wallet address
+    }
+
+    function setIsPublicMintEnabled(bool isPublicMintEnabled_) external onlyOwner {
+        isPublicMintEnabled = isPublicMintEnabled_;
+    }
+
+    function setBaseTokenUri(string calldata baseTokenUri_) external onlyOwner {
+        baseTokenUri = baseTokenUri_;
+    }
+
+    function tokenURI(uint256 tokenId_) public view override returns (string memory) {
+        require(_exists(tokenId_), 'Token does not exists');
+        return string(abi.encodePacked(baseTokenUri, Strings.toString(tokenId_), ".jason"));
+    }
+
+    function withdraw() external onlyOwner {
+        (bool success, ) = withdrawWallet.call{ value: address(this).balance }('');
+        require(success, 'withdraw failed');
+    }
+
 }
