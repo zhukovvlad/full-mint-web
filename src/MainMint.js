@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Box, Button, Flex, Input, Text } from "@chakra-ui/react";
 import { ethers, BigNumber } from "ethers";
 import RoboPunksNFT from "./RoboPunkNFT.json";
 
@@ -18,7 +19,9 @@ const MainMint = ({ accounts, setAccounts }) => {
                 signer
             );
             try {
-                const response = await contract.mint(BigNumber.from(mintAmount));
+                const response = await contract.mint(BigNumber.from(mintAmount), {
+                    value: ethers.utils.parseEther((0.02 * mintAmount).toString()),
+                });
                 console.log('response ', response);
             } catch (err) {
                 console.log("error ", err);
@@ -37,24 +40,88 @@ const MainMint = ({ accounts, setAccounts }) => {
     };
 
     return (
-        <div>
-            <h1>RoboPunks</h1>
-            <p>It's 2078.</p>
-            {isConnected ? (
+        <Flex justify="center" align="center" height="100vh" paddingBottom="150px">
+            <Box width="520px">
                 <div>
+                    <Text fontSize="48px" textShadow="0 5px #000000">RoboPunks</Text>
+                    <Text
+                        fontSize="30px"
+                        letterSpacing="-5.5%"
+                        fontFamily="VT323"
+                        textshadow="0 2px 2px #000000"
+                    >
+                        It's 2078. Can the RoboPunks NFT save humans from destructive rampant NFT speculations? Mint RoboPunks to find out.
+                    </Text>
+                </div>
+                {isConnected ? (
                     <div>
-                        <button onClick={handleDecrement}>-</button>
-                        <input type="number" value={mintAmount} />
-                        <button onClick={handleIncrement}>+</button>
+                        <Flex align="center" justify="center">
+                            <Button
+                                backgroundColor="#D6517D"
+                                borderRadius="5px"
+                                baxShadow="0px 2px 2px 1px #0F0F0F"
+                                color="white"
+                                cursor="pointer"
+                                fontFamily="inherit"
+                                padding="15px"
+                                margin="10px"
+                                onClick={handleDecrement}
+                            >
+                                -
+                            </Button>
+                            <Input
+                                readOnly
+                                fontFamily="inherit"
+                                width="100px"
+                                height="40px"
+                                textAlign="center"
+                                paddingLeft="19px"
+                                marginTop="10px"
+                                type="number"
+                                value={mintAmount}
+                            />
+                            <Button
+                                backgroundColor="#D6517D"
+                                borderRadius="5px"
+                                baxShadow="0px 2px 2px 1px #0F0F0F"
+                                color="white"
+                                cursor="pointer"
+                                fontFamily="inherit"
+                                padding="15px"
+                                margin="10px"
+                                onClick={handleIncrement}
+                            >
+                                +
+                            </Button>
+                        </Flex>
+                        <Button
+                            backgroundColor="#D6517D"
+                            borderRadius="5px"
+                            baxShadow="0px 2px 2px 1px #0F0F0F"
+                            color="white"
+                            cursor="pointer"
+                            fontFamily="inherit"
+                            padding="15px"
+                            margin="10px"
+                            onClick={handleMint}
+                        >
+                            MINT NOW
+                        </Button>
                     </div>
-                    <button onClick={handleMint}>Mint Now</button>
-                </div>
-            ) : (
-                <div>
-                    <p>You must be connected to Mint.</p>
-                </div>
-            )}
-        </div>
+                ) : (
+                    <Text
+                        marginTop="70px"
+                        fontSize="30px"
+                        letterSpacing="-5.5%"
+                        fontFamily="VT323"
+                        textshadow="0 2px 2px #000000"
+                        color="#D6517D"
+                    >
+                        You must be connected to Mint.
+                    </Text>
+                )}
+            </Box>
+        </Flex>
     );
 };
 
